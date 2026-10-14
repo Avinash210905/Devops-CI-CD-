@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101827" />
+    <meta name="description" content="A learning project showing an automated CI/CD pipeline with GitHub Actions and GitHub Pages." />
+    <title>Shipshape — CI/CD learning project</title>
+    <style>
+      :root { color-scheme: dark; --bg:#101827; --panel:#172235; --line:#293750; --text:#eff5ff; --muted:#a4b2c8; --mint:#69e0bc; --blue:#8cb8ff; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-height:100vh; background:radial-gradient(ellipse at 75% -5%,#253b57 0,transparent 38%),var(--bg); color:var(--text); font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
+      a { color:var(--mint); }
+      .wrap { width:min(1080px,calc(100% - 40px)); margin:auto; }
+      header { padding:28px 0; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+      .brand { display:flex; align-items:center; gap:11px; font-weight:750; letter-spacing:.02em; }
+      .mark { width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--mint);color:#10251f;font-weight:900; }
+      .tag { color:var(--muted); font-size:.86rem; }
+      main { padding:72px 0 58px; }
+      .eyebrow { color:var(--mint); text-transform:uppercase; letter-spacing:.15em; font-size:.75rem; font-weight:750; }
+      h1 { max-width:760px; margin:14px 0 18px; font-size:clamp(2.6rem,7vw,5.3rem); line-height:1.02; letter-spacing:-.055em; }
+      h1 span { color:var(--mint); }
+      .intro { max-width:690px; color:var(--muted); font-size:1.12rem; }
+      .pipeline { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:46px 0 72px; }
+      .step,.card { background:linear-gradient(145deg,#1b2940,#151f30); border:1px solid var(--line); border-radius:18px; }
+      .step { min-height:153px; padding:20px; position:relative; }
+      .step:not(:last-child)::after { content:"→"; color:var(--mint); position:absolute; right:-17px; top:55px; z-index:1; font-size:1.3rem; }
+      .num { color:var(--blue); font-size:.78rem; font-weight:800; letter-spacing:.08em; }
+      .step h2 { margin:13px 0 4px; font-size:1.08rem; }
+      .step p,.card p { margin:0; color:var(--muted); font-size:.91rem; }
+      .grid { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
+      .card { padding:25px; }
+      .card h2 { margin:0 0 10px; font-size:1.2rem; }
+      .card ul { padding-left:20px; margin:12px 0 0; color:var(--muted); }
+      .card li+li { margin-top:7px; }
+      code { color:var(--mint); background:#0e1725; border:1px solid var(--line); padding:2px 6px; border-radius:6px; font-size:.86em; }
+      .status { display:inline-flex; align-items:center; gap:9px; margin-top:18px; padding:9px 13px; border-radius:999px; background:#173b36; color:#9df0d7; font-size:.86rem; }
+      .dot { width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint); }
+      button { margin-top:18px; border:0; border-radius:10px; padding:12px 18px; background:var(--mint); color:#10251f; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; }
+      button:disabled { opacity:.6; cursor:wait; }
+      #pipeline-stages { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:0; list-style:none; }
+      #pipeline-stages li { padding:12px; border:1px solid var(--line); border-radius:10px; color:var(--muted); }
+      #pipeline-logs { min-height:90px; max-height:210px; overflow:auto; white-space:pre-wrap; padding:16px; border-radius:10px; background:#0b111c; color:var(--mint); }
+      footer { border-top:1px solid var(--line); padding:22px 0 32px; color:var(--muted); font-size:.83rem; }
+      @media(max-width:760px) { .pipeline,#pipeline-stages { grid-template-columns:repeat(2,1fr); } .pipeline { margin:34px 0 48px; } .step::after { display:none; } .grid { grid-template-columns:1fr; } main { padding-top:52px; } }
+      @media(max-width:440px) { .pipeline,#pipeline-stages { grid-template-columns:1fr; } header .tag { display:none; } }
+    </style>
+  </head>
+  <body>
+    <header class="wrap">
+      <div class="brand"><span class="mark" aria-hidden="true">S</span> SHIPSHAPE</div>
+      <div class="tag">A tiny project with a reliable delivery loop</div>
+    </header>
+    <main class="wrap">
+      <div class="eyebrow">DevOps in action</div>
+      <h1>From a code push<br />to <span>live on the web.</span></h1>
+      <p class="intro">This learning project demonstrates continuous integration and continuous deployment. GitHub Actions builds and checks the site, then publishes successful changes to GitHub Pages.</p>
+      <div class="pipeline" aria-label="CI/CD pipeline stages">
+        <article class="step"><div class="num">01 / COMMIT</div><h2>Write &amp; push</h2><p>Track the project with Git and push to GitHub.</p></article>
+        <article class="step"><div class="num">02 / CI</div><h2>Build</h2><p>Prepare the website files for publishing.</p></article>
+        <article class="step"><div class="num">03 / CI</div><h2>Test</h2><p>Check the page structure before release.</p></article>
+        <article class="step"><div class="num">04 / CD</div><h2>Deploy</h2><p>Publish the verified site to GitHub Pages.</p></article>
+      </div>
+      <section class="grid" aria-label="Project details">
+        <article class="card"><h2>What happens automatically?</h2><p>Every pull request and push to <code>main</code> runs the build and checks. A successful push to <code>main</code> continues to deployment.</p><ul><li>CI catches common page and build problems early.</li><li>CD publishes the same built files that passed validation.</li><li>The deployment job uses GitHub's Pages environment and permissions.</li></ul></article>
+        <article class="card"><h2>Pipeline status</h2><p>The workflow is ready to run when this project is pushed to a GitHub repository.</p><div class="status"><span class="dot" aria-hidden="true"></span> Waiting for first workflow run</div></article>
+      </section>
+      <section class="card" aria-labelledby="interactive-title" style="margin-top:18px">
+        <h2 id="interactive-title">Interactive pipeline</h2>
+        <p>Run a demonstration of the checkout, build, test, and deploy stages.</p>
+        <button id="run-pipeline" type="button">Run Pipeline</button>
+        <p id="pipeline-status" role="status" aria-live="polite">Waiting</p>
+        <ol id="pipeline-stages">
+          <li data-stage="Checkout">Checkout — Waiting</li>
+          <li data-stage="Build">Build — Waiting</li>
+          <li data-stage="Test">Test — Waiting</li>
+          <li data-stage="Deploy">Deploy — Waiting</li>
+        </ol>
+        <h3>Pipeline logs</h3>
+        <pre id="pipeline-logs" aria-live="polite">Waiting for pipeline run…</pre>
+      </section>
+    </main>
+    <footer><div class="wrap">Built as a hands-on introduction to Git, GitHub Actions, CI/CD, and GitHub Pages.</div></footer>
+    <script>
+      const runButton = document.querySelector('#run-pipeline');
+      const status = document.querySelector('#pipeline-status');
+      const logs = document.querySelector('#pipeline-logs');
+      const stages = [...document.querySelectorAll('[data-stage]')];
+      const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      runButton.addEventListener('click', async () => {
+        runButton.disabled = true;
+        status.textContent = 'Running';
+        logs.textContent = '';
+        stages.forEach((stage) => { stage.textContent = `${stage.dataset.stage} — Waiting`; });
+        const messages = [
+          'Checking out source code…',
+          'Building the website…',
+          'Running project tests…',
+          'Deploying to GitHub Pages…'
+        ];
+        for (let i = 0; i < stages.length; i += 1) {
+          const name = stages[i].dataset.stage;
+          stages[i].textContent = `${name} — Running`;
+          logs.textContent += `[INFO] ${messages[i]}\n`;
+          await pause(800);
+          stages[i].textContent = `${name} — Completed ✓`;
+          logs.textContent += `[SUCCESS] ${name} completed.\n`;
+        }
+        status.textContent = 'Pipeline completed successfully ✓';
+        runButton.disabled = false;
+      });
+    </script>
+  </body>
+</html>
