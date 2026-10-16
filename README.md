@@ -28,3 +28,5 @@ Open `index.html` in a browser to view the page. The generated Pages-ready files
 4. Open **Settings → Pages** to find the published site URL.
 
 Pull requests run the build and tests. Successful pushes to `main` (and manual runs started from the Actions tab) also deploy to Pages.
+
+If `Configure GitHub Pages` reports `HttpError: Not Found`, enable Pages using **Settings → Pages → Build and deployment → Source → GitHub Actions**, then rerun the workflow. The action's automatic enablement option requires a separate token with Pages administration permissions.
